@@ -2,14 +2,22 @@ package com.example.yue.gm;
 
 import android.app.Activity;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LinearInterpolator;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.Toast;
+import android.widget.LinearLayout;
+
+import java.util.ArrayList;
+
+import model.WordButton;
+import myui.MyGridView;
+import util.Util;
 
 public class MainActivity extends Activity {
 
@@ -33,12 +41,31 @@ public class MainActivity extends Activity {
     private ImageView mViewPan;
     private ImageView mViewPanbar;
 
+    //文字框容器
+    private ArrayList<WordButton> mAllWords;
+
+    //已选框文字容器
+    private ArrayList<WordButton> mBtnSelectWords;
+
+    //待选文本框
+    private MyGridView mMygridView;
+
+    //已选文本框
+    private LinearLayout mViewWordsCantainer;
+
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mBtnPlaystart = (ImageButton)findViewById(R.id.btn_play_start);
+        mViewPan = (ImageView)findViewById(R.id.pan_1);
+        mViewPanbar = (ImageView)findViewById(R.id.pin_1);
+        mMygridView = (MyGridView)findViewById(R.id.gridview);//待选文本框
+        mViewWordsCantainer = (LinearLayout)findViewById(R.id.word_select_container);//已选文本框
+
 
         //初始化唱片动画
         mPanAnim = AnimationUtils.loadAnimation(this,R.anim.rotate);
@@ -110,9 +137,7 @@ public class MainActivity extends Activity {
             }
         });
 
-        mBtnPlaystart = (ImageButton)findViewById(R.id.btn_play_start);
-        mViewPan = (ImageView)findViewById(R.id.pan_1);
-        mViewPanbar = (ImageView)findViewById(R.id.pin_1);
+
 
         mBtnPlaystart.setOnClickListener(new View.OnClickListener() {
             //设置播放按钮点击事件
@@ -121,6 +146,15 @@ public class MainActivity extends Activity {
                 hangdlePlayButton();
             }
         });
+
+        //获取更新文本框数据
+        initCurrentStageData();
+    }
+
+    @Override
+    protected void onPause() {
+        mViewPan.clearColorFilter();
+        super.onPause();
     }
 
     //播放动画总方法
@@ -133,5 +167,59 @@ public class MainActivity extends Activity {
             }
         }
 
+    }
+
+    private void initCurrentStageData(){
+
+        //初始化已选文字
+        mBtnSelectWords = initWordSelect();
+
+        //创建控件，并且设置宽高
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(140,140);
+
+        for (int i = 0;i <mBtnSelectWords.size();i++){
+            mViewWordsCantainer.addView(mBtnSelectWords.get(i).mViewButton,params);//创建Button控件
+        }
+
+
+        //获取数据
+        mAllWords = initAllword();
+        //更新数据-MyGridView
+        mMygridView.updateData(mAllWords);
+    }
+
+
+    //初始化待选文字框
+    private ArrayList<WordButton> initAllword(){
+        ArrayList<WordButton> data = new ArrayList<WordButton>();
+
+        //获取所有待选文字
+        //相应方法
+        for (int i = 0; i < MyGridView.COUNTS_WORD ; i++){
+            WordButton button = new WordButton();
+            button.mWordString = "测";
+            data.add(button);
+        }
+            return data;
+    }
+
+    //初始化已选文字框
+    private ArrayList<WordButton> initWordSelect(){
+        ArrayList<WordButton> data = new ArrayList<WordButton>();
+
+        for (int i = 0; i < 4;i ++){
+            View view = Util.getView(MainActivity.this,R.layout.self_ui_gridview_item);
+
+            WordButton holder = new WordButton();
+
+            holder.mViewButton = (Button)view.findViewById(R.id.item_btn);
+            holder.mViewButton.setTextColor(Color.WHITE);
+            holder.mViewButton.setText("");
+            holder.mIsVisiable = false;
+            holder.mViewButton.setBackgroundResource(R.drawable.game_wordblank);
+
+            data.add(holder);
+        }
+        return data;
     }
 }
