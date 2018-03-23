@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:andorid="http://schemas.android.com/apk/res/android"
+    andorid:id="@+id/pan_layout"
+    andorid:orientation="vertical"
+    andorid:layout_width="wrap_content"
+    andorid:layout_height="wrap_content"
+    andorid:gravity="center"
+    andorid:layout_centerHorizontal="true"
+    andorid:layout_centerVertical="true"
+    andorid:layout_marginTop="30dp">
+    
+    <FrameLayout
+        andorid:layout_width="wrap_content"
+        andorid:layout_height="wrap_content">
+
+        <ImageView
+            andorid:layout_width="wrap_content"
+            andorid:layout_height="wrap_content"
+            andorid:src="@drawable/game_title"/>
+
+        <TextView
+            andorid:layout_width="wrap_content"
+            andorid:layout_height="wrap_content"
+            andorid:layout_gravity="center"
+            andorid:text="歌曲"
+            andorid:textColor="#FFF"
+            andorid:textSize="20sp"/>
+        
+    </FrameLayout>
+    
+    <FrameLayout
+        andorid:layout_width="260dp"
+        andorid:layout_height="wrap_content">
+
+        <ImageView
+            andorid:id="@+id/pan_1"
+            andorid:layout_width="wrap_content"
+            andorid:layout_height="wrap_content"
+            andorid:layout_gravity="center"
+            andorid:src="@drawable/game_disc"/>
+
+        <ImageView
+            andorid:layout_width="wrap_content"
+            andorid:layout_height="wrap_content"
+            andorid:layout_gravity="center"
+            andorid:src="@drawable/game_disc_light"/>
+
+        <ImageButton
+            andorid:id="@+id/btn_play_start"
+            andorid:layout_width="wrap_content"
+            andorid:layout_height="wrap_content"
+            andorid:layout_gravity="center"
+            andorid:background="@drawable/play_button_icon"/>
+        
+        <ImageView
+            andorid:id="@+id/pin_1"
+            andorid:layout_width="50dp"
+            andorid:layout_height="140dp"
+            andorid:layout_gravity="right"
+            andorid:src="@drawable/index_pin"/>
+
+
+    </FrameLayout>
+</LinearLayout>

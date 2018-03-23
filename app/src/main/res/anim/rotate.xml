@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<set xmlns:android="http://schemas.android.com/apk/res/android">
+<!--    duration:动画持续时间，单位为毫秒
+        fromDegrees:动画起始角度
+        toDegrees:动画终止角度
+        privoX:动画的旋转位置x轴
+        repeatCount:动画持续次数
+-->
+    <rotate
+        android:duration="2400"
+        android:fromDegrees="0"
+        android:toDegrees="359"
+        android:pivotX="50%"
+        android:pivotY="50%"
+        android:repeatCount="3"/>
+
+</set>
