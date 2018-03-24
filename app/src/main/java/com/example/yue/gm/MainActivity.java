@@ -12,14 +12,16 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
+import model.IWordButtonClickListener;
 import model.WordButton;
 import myui.MyGridView;
 import util.Util;
 
-public class MainActivity extends Activity {
+public class MainActivity extends Activity  implements IWordButtonClickListener{
 
     //唱片动画定义
     private Animation mPanAnim;//定义动画
@@ -65,6 +67,8 @@ public class MainActivity extends Activity {
         mViewPanbar = (ImageView)findViewById(R.id.pin_1);
         mMygridView = (MyGridView)findViewById(R.id.gridview);//待选文本框
         mViewWordsCantainer = (LinearLayout)findViewById(R.id.word_select_container);//已选文本框
+        //注册监听
+        mMygridView.registOnWordButtonClick(this);
 
 
         //初始化唱片动画
@@ -149,6 +153,12 @@ public class MainActivity extends Activity {
 
         //获取更新文本框数据
         initCurrentStageData();
+    }
+
+    @Override
+    public void onWordButtonClick(WordButton wordButton){
+        Toast.makeText(this,wordButton.mindex + "",Toast.LENGTH_SHORT).show();
+
     }
 
     @Override
