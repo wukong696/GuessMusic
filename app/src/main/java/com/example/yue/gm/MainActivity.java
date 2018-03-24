@@ -16,10 +16,15 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
+import data.Const;
 import model.IWordButtonClickListener;
+import model.Song;
 import model.WordButton;
 import myui.MyGridView;
 import util.Util;
+
+import static data.Const.INDEX_FILE_NAME;
+import static data.Const.INDEX_SONG_NAME;
 
 public class MainActivity extends Activity  implements IWordButtonClickListener{
 
@@ -54,6 +59,13 @@ public class MainActivity extends Activity  implements IWordButtonClickListener{
 
     //已选文本框
     private LinearLayout mViewWordsCantainer;
+
+    //当前歌曲的对象
+    private Song mCurrentSong;
+
+    //当前关的索引,因为数组的索引问题，所以初始化为-1
+    private int mCurrentStageIndex = -1;
+
 
 
 
@@ -179,7 +191,19 @@ public class MainActivity extends Activity  implements IWordButtonClickListener{
 
     }
 
+    //根据当前关卡index获取歌曲文件名和歌曲名并返回
+    private Song loadStageSongInfo(int stageIndex){
+        Song song = new Song();
+        String[] stage = Const.SONG_INFO[stageIndex];
+        song.setSongFileName(stage[Const.INDEX_FILE_NAME]);
+        song.setSongName(stage[Const.INDEX_SONG_NAME]);
+
+        return  song;
+    }
+
     private void initCurrentStageData(){
+        //获取一个Song实例，初始化当前关的歌曲信息
+        mCurrentSong = loadStageSongInfo(++mCurrentStageIndex);
 
         //初始化已选文字
         mBtnSelectWords = initWordSelect();
@@ -218,7 +242,7 @@ public class MainActivity extends Activity  implements IWordButtonClickListener{
     private ArrayList<WordButton> initWordSelect(){
         ArrayList<WordButton> data = new ArrayList<WordButton>();
         //获取控件，生成WordButton控件，并返回数据
-        for (int i = 0; i < 4;i ++){
+        for (int i = 0; i < mCurrentSong.getNameLength();i ++){
             View view = Util.getView(MainActivity.this,R.layout.self_ui_gridview_item);
 
             WordButton holder = new WordButton();
