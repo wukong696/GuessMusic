@@ -77,13 +77,14 @@ public class MyGridView extends GridView {
             return pos;
         }
         @Override
-        public View getView(int pos, View v, ViewGroup p){
+        public View getView(int pos, View convertView, ViewGroup parent){
             //获取一个view，并且将对应位置的数据显示在上面
             //1.当前选择项。2.对应的view 3.view所在的组
             final WordButton holder;
 
-            if(v == null){//判断是否创建了
-                v = Util.getView(mContext, R.layout.self_ui_gridview_item);
+            if(convertView == null){//判断是否创建了
+
+                convertView = Util.getView(mContext, R.layout.self_ui_gridview_item);
 
                 holder = mArrayList.get(pos);
 
@@ -93,24 +94,26 @@ public class MyGridView extends GridView {
                 mScaleAnimation.setStartOffset(pos * 50);
 
                 holder.mindex = pos;
-                holder.mViewButton = (Button)v.findViewById(R.id.item_btn);
 
-                //设置点击事件
-                holder.mViewButton.setOnClickListener(new View.OnClickListener(){
-                    @Override
-                    public void onClick(View v) {
-                        mWordButtonListener.onWordButtonClick(holder);
-                    }
-                });
+                if(holder.mViewButton== null) {
+                    holder.mViewButton = (Button) convertView.findViewById(R.id.item_btn);
 
-                v.setTag(holder);
+                    //设置点击事件
+                    holder.mViewButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            mWordButtonListener.onWordButtonClick(holder);
+                        }
+                    });
+                }
+                convertView.setTag(holder);
             }else {
-                holder = (WordButton)v.getTag();
+                holder = (WordButton)convertView.getTag();
 
             }
             holder.mViewButton.setText(holder.mWordString);//设置显示文字
-            v.startAnimation(mScaleAnimation);//设置动画
-            return v;
+            convertView.startAnimation(mScaleAnimation);//设置动画
+            return convertView;
 
 
         }

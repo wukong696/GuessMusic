@@ -12,7 +12,6 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -23,12 +22,12 @@ import model.IWordButtonClickListener;
 import model.Song;
 import model.WordButton;
 import myui.MyGridView;
+import util.MyLog;
 import util.Util;
 
-import static data.Const.INDEX_FILE_NAME;
-import static data.Const.INDEX_SONG_NAME;
-
 public class MainActivity extends Activity  implements IWordButtonClickListener{
+
+    public final static String TAG = "MainActivity";
 
     //唱片动画定义
     private Animation mPanAnim;//定义动画
@@ -171,7 +170,49 @@ public class MainActivity extends Activity  implements IWordButtonClickListener{
 
     @Override
     public void onWordButtonClick(WordButton wordButton){
-        Toast.makeText(this,wordButton.mindex + "",Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this,wordButton.mindex + "",Toast.LENGTH_SHORT).show();
+        setSelectWord(wordButton);
+    }
+
+    private void setSelectWord(WordButton wordButton){
+        //设置答案
+        for(int i = 0; i < mBtnSelectWords.size();i++){//遍历已选文本框
+            if(mBtnSelectWords.get(i).mWordString.length() == 0){
+                //判断已选文本框是否为空
+                //设置答案文本框内容和可见性
+                mBtnSelectWords.get(i).mViewButton.setText(wordButton.mWordString );
+                mBtnSelectWords.get(i).mIsVisiable = true;
+                mBtnSelectWords.get(i).mWordString = wordButton.mWordString;
+                //记录索引
+                mBtnSelectWords.get(i).mindex = wordButton.mindex;
+
+                //Log.....
+                MyLog.d(TAG,mBtnSelectWords.get(i).mindex +"");
+
+                //选择之后，待选框不可见
+                setButtonVisiable(wordButton,View.INVISIBLE);
+
+                break;
+            }
+        }
+    }
+    //清楚答案
+    private void clearTheAnswer(WordButton wordButton){
+        wordButton.mViewButton.setText("");
+        wordButton.mWordString = "";
+        wordButton.mIsVisiable = false;//已选框设置不可见
+
+        //设置待选框可见性
+        setButtonVisiable(mAllWords.get(wordButton.mindex),View.VISIBLE);
+    }
+
+    //设置待选文字框可见性
+    private void setButtonVisiable(WordButton button,int visibility){
+        button.mViewButton.setVisibility(visibility);
+        button.mIsVisiable = (visibility == View.VISIBLE) ? true : false;
+
+        //Log....
+        MyLog.d(TAG,button.mIsVisiable +"");
 
     }
 
@@ -248,13 +289,20 @@ public class MainActivity extends Activity  implements IWordButtonClickListener{
         for (int i = 0; i < mCurrentSong.getNameLength();i ++){
             View view = Util.getView(MainActivity.this,R.layout.self_ui_gridview_item);
 
-            WordButton holder = new WordButton();
+            final WordButton holder = new WordButton();
 
             holder.mViewButton = (Button)view.findViewById(R.id.item_btn);
             holder.mViewButton.setTextColor(Color.WHITE);
             holder.mViewButton.setText("");
             holder.mIsVisiable = false;
             holder.mViewButton.setBackgroundResource(R.drawable.game_wordblank);
+            holder.mViewButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    clearTheAnswer(holder);
+                }
+            });
+
 
             data.add(holder);
         }
