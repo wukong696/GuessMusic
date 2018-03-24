@@ -174,7 +174,7 @@ public class MainActivity extends Activity {
         //初始化已选文字
         mBtnSelectWords = initWordSelect();
 
-        //创建控件，并且设置宽高
+        //创建LinearLayout控件用来装传入的Wordbutton控件，并且设置宽高
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(140,140);
 
         for (int i = 0;i <mBtnSelectWords.size();i++){
@@ -182,7 +182,7 @@ public class MainActivity extends Activity {
         }
 
 
-        //获取数据
+        //从initAllword获取待选文字数据
         mAllWords = initAllword();
         //更新数据-MyGridView
         mMygridView.updateData(mAllWords);
@@ -191,6 +191,7 @@ public class MainActivity extends Activity {
 
     //初始化待选文字框
     private ArrayList<WordButton> initAllword(){
+        //生成所有单个字到容器并返回数据
         ArrayList<WordButton> data = new ArrayList<WordButton>();
 
         //获取所有待选文字
@@ -206,7 +207,7 @@ public class MainActivity extends Activity {
     //初始化已选文字框
     private ArrayList<WordButton> initWordSelect(){
         ArrayList<WordButton> data = new ArrayList<WordButton>();
-
+        //获取控件，生成WordButton控件，并返回数据
         for (int i = 0; i < 4;i ++){
             View view = Util.getView(MainActivity.this,R.layout.self_ui_gridview_item);
 

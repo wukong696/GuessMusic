@@ -17,12 +17,13 @@ import model.WordButton;
 import util.Util;
 
 public class MyGridView extends GridView {
-
-    //定义字数
+    //MyGridView是自己定位的控件，显示待选文字
+    //定义待选字数
     public final static int COUNTS_WORD = 24;
 
-    //定义一个装字的数据容器
+    //定义一个装字的数据容器，数据源
     private ArrayList<WordButton> mArrayList = new ArrayList<WordButton>();
+
     //定义一个adapter
     private MyGridAdapter mAdapter;
 
@@ -34,7 +35,7 @@ public class MyGridView extends GridView {
 
         mContext = context;
 
-        //将adapter和view关联
+        //将adapter和view关联，因为是继承的所以直接用this
         mAdapter = new MyGridAdapter();
         this.setAdapter(mAdapter);
 
