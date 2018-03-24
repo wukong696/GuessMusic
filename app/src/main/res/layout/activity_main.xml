@@ -20,4 +20,7 @@
         <include layout="@layout/name_select"/>
 
     </LinearLayout>
+
+    <!--答案正确界面-->
+    <include layout="@layout/anwser_right"/>
 </FrameLayout>

@@ -16,6 +16,8 @@ import android.widget.LinearLayout;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import data.Const;
 import model.IWordButtonClickListener;
@@ -28,6 +30,11 @@ import util.Util;
 public class MainActivity extends Activity  implements IWordButtonClickListener{
 
     public final static String TAG = "MainActivity";
+    //答案状态，正确，错误，不完整
+    public final static int STATUS_ANSWER_RIGHT =1;
+    public final static int STATUS_ANSWER_WEONG =2;
+    public final static int STATUS_ANSWER_LACK =3;
+    public final static int SPASH_TIMES = 6;
 
     //唱片动画定义
     private Animation mPanAnim;//定义动画
@@ -67,6 +74,8 @@ public class MainActivity extends Activity  implements IWordButtonClickListener{
     //当前关的索引,因为数组的索引问题，所以初始化为-1
     private int mCurrentStageIndex = -1;
 
+    //过关界面
+    private View mPassView;
 
 
 
@@ -169,9 +178,23 @@ public class MainActivity extends Activity  implements IWordButtonClickListener{
     }
 
     @Override
-    public void onWordButtonClick(WordButton wordButton){
+    public void onWordButtonClick(WordButton wordButton){//点击待选框文字事件
         //Toast.makeText(this,wordButton.mindex + "",Toast.LENGTH_SHORT).show();
         setSelectWord(wordButton);
+
+        //获得答案状态
+        int checkResult = checkTheAnswer();
+        //检查答案
+        if(checkResult == STATUS_ANSWER_RIGHT){
+            //过关并获得奖励
+            handlePassEvent();
+        }else if(checkResult == STATUS_ANSWER_WEONG){
+            //闪烁文字并提示用户
+            sparkTheWrods();
+        }else if(checkResult == STATUS_ANSWER_LACK){
+            //设置文字颜色为白色
+
+        }
     }
 
     private void setSelectWord(WordButton wordButton){
@@ -196,7 +219,7 @@ public class MainActivity extends Activity  implements IWordButtonClickListener{
             }
         }
     }
-    //清楚答案
+    //清除答案
     private void clearTheAnswer(WordButton wordButton){
         wordButton.mViewButton.setText("");
         wordButton.mWordString = "";
@@ -299,7 +322,13 @@ public class MainActivity extends Activity  implements IWordButtonClickListener{
             holder.mViewButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    //点击已选框里面的文字清除文字设置不可见，并且设置其他文字颜色为白色
+                    for(int i = 0;i <mBtnSelectWords.size();i++){
+                        mBtnSelectWords.get(i).mViewButton.setTextColor(Color.WHITE);
+                    }
+
                     clearTheAnswer(holder);
+
                 }
             });
 
@@ -369,5 +398,65 @@ public class MainActivity extends Activity  implements IWordButtonClickListener{
         //传char值
         return str.charAt(0);
     }
+
+
+    //判断答案
+    private int checkTheAnswer(){
+        //先检查长度
+        for(int i = 0;i <mBtnSelectWords.size();i++){
+            //如果有空的，说明答案还不完整
+            if (mBtnSelectWords.get(i).mWordString.length() == 0){
+                return STATUS_ANSWER_LACK;
+            }
+        }
+
+        //答案完整，继续检查正确性
+        StringBuffer sb = new StringBuffer();//定义String变量,用于比较
+        for(int i = 0;i<mBtnSelectWords.size();i++){
+            sb.append(mBtnSelectWords.get(i).mWordString);
+        }
+        return (sb.toString().equals(mCurrentSong.getSongName()))?
+                STATUS_ANSWER_RIGHT : STATUS_ANSWER_WEONG;//判断和答案是否相同
+
+    }
+
+    //闪烁文字
+    private void  sparkTheWrods(){
+        //定时器相关
+        TimerTask task = new TimerTask() {
+
+            boolean mChange = false;
+            int mSpardTiems = 0;//闪烁次数
+            @Override
+            public void run() {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        //显示闪烁次数
+                        if(++mSpardTiems > SPASH_TIMES){
+                            return;//停止闪烁，初始化
+                        }
+                        //执行闪烁逻辑：交替显示红色和白色文字
+                        for(int i = 0;i <mBtnSelectWords.size();i++){
+                            mBtnSelectWords.get(i).mViewButton.setTextColor(mChange?Color.RED : Color.RED);
+                        }
+                        mChange = !mChange;
+                    }
+                });
+            }
+        };
+
+        Timer timer = new Timer();
+        timer.schedule(task,1,150);
+    }
+
+
+    //处理过关界面和事件
+    private void handlePassEvent(){
+        mPassView = (LinearLayout)findViewById(R.id.pass_view);
+        mPassView.setVisibility(View.VISIBLE);
+
+    }
+
 
 }
