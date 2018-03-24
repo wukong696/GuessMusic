@@ -10,7 +10,7 @@ public class Song {
     //歌曲名字长度
     private int mNameLength;
 
-    //将革命转换为一个一个单字
+    //将歌名转换为一个一个单字
     public char[] getNameCharacters(){
         return  mSongName.toCharArray();
     }

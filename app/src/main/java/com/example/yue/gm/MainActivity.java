@@ -14,7 +14,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Random;
 
 import data.Const;
 import model.IWordButtonClickListener;
@@ -229,10 +231,11 @@ public class MainActivity extends Activity  implements IWordButtonClickListener{
         ArrayList<WordButton> data = new ArrayList<WordButton>();
 
         //获取所有待选文字
-        //相应方法
+        String[] words = generateWoeds();
+
         for (int i = 0; i < MyGridView.COUNTS_WORD ; i++){
             WordButton button = new WordButton();
-            button.mWordString = "测";
+            button.mWordString = words[i];
             data.add(button);
         }
             return data;
@@ -257,4 +260,66 @@ public class MainActivity extends Activity  implements IWordButtonClickListener{
         }
         return data;
     }
+
+    //生成所有待选文字包括歌曲名
+    private String[] generateWoeds(){
+
+        Random random = new Random();//为了打乱顺序随机数使用
+        String[] words = new String[MyGridView.COUNTS_WORD];
+
+        //存入歌名
+        for(int i  = 0; i<mCurrentSong.getNameLength(); i++){
+            words[i] = mCurrentSong.getNameCharacters()[i] + "" ;//将歌曲名字字符串转为相应字符，将char类型转换为String
+        }
+
+        //除了歌名获取剩下的文字
+        for (int i = mCurrentSong.getNameLength(); i<MyGridView.COUNTS_WORD; i++){
+            words[i] = getRandomChar() + "";
+        }
+
+        //打乱文字在数组中的顺序,首先从所有元素中随机选取一个与第一个元素交换
+        //然后在第二个之后选择一个元素与第二个交换，直到最后一个元素
+        //这个算法保证每个元素在每个位置的概率都是1/n
+        for(int i = MyGridView.COUNTS_WORD - 1; i >= 0 ;i--){
+            int index = random.nextInt(i +1);//为了数是0-24
+
+            String buf = words[index];
+            words[index] = words [i];
+            words[i] = buf;
+        }
+
+
+
+        return  words;
+
+    }
+
+
+    //生成随机汉字
+    private char getRandomChar(){
+        String str = "";
+        int hightPos;
+        int lowPos;
+        //随机
+        Random random = new Random();
+        //生成高低位
+        hightPos = (176 +Math.abs(random.nextInt(39)));
+        lowPos = (161 + Math.abs(random.nextInt(93)));
+        //创建容器装高低位组成汉子
+        byte[] b =new byte[2];
+        //强制整形变量
+        b[0] = (Integer.valueOf(hightPos).byteValue());
+        b[1] = (Integer.valueOf(lowPos).byteValue());
+
+        try {
+            //生成汉字
+            str = new String(b,"GBK");
+
+        }catch (UnsupportedEncodingException e){
+            e.printStackTrace();
+        }
+        //传char值
+        return str.charAt(0);
+    }
+
 }
