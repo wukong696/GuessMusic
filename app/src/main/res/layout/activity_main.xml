@@ -21,6 +21,9 @@
 
     </LinearLayout>
 
+    <!--浮动界面-->
+    <include layout="@layout/float_buttons"/>
+
     <!--答案正确界面-->
     <include layout="@layout/anwser_right"/>
 </FrameLayout>

@@ -31,10 +31,11 @@ public class MainActivity extends Activity  implements IWordButtonClickListener{
 
     public final static String TAG = "MainActivity";
     //答案状态，正确，错误，不完整
-    public final static int STATUS_ANSWER_RIGHT =1;
-    public final static int STATUS_ANSWER_WEONG =2;
-    public final static int STATUS_ANSWER_LACK =3;
-    public final static int SPASH_TIMES = 6;
+    private final static int STATUS_ANSWER_RIGHT =1;
+    private final static int STATUS_ANSWER_WEONG =2;
+    private final static int STATUS_ANSWER_LACK =3;
+
+    private final static int SPASH_TIMES = 6;
 
     //唱片动画定义
     private Animation mPanAnim;//定义动画
@@ -423,22 +424,23 @@ public class MainActivity extends Activity  implements IWordButtonClickListener{
     //闪烁文字
     private void  sparkTheWrods(){
         //定时器相关
-        TimerTask task = new TimerTask() {
+         TimerTask task = new TimerTask() {
 
             boolean mChange = false;
             int mSpardTiems = 0;//闪烁次数
             @Override
             public void run() {
-                runOnUiThread(new Runnable() {
+                runOnUiThread(new Runnable() {//修改ui要回到用主线程
                     @Override
                     public void run() {
                         //显示闪烁次数
-                        if(++mSpardTiems > SPASH_TIMES){
+                        if( ++mSpardTiems > SPASH_TIMES){
+
                             return;//停止闪烁，初始化
                         }
                         //执行闪烁逻辑：交替显示红色和白色文字
                         for(int i = 0;i <mBtnSelectWords.size();i++){
-                            mBtnSelectWords.get(i).mViewButton.setTextColor(mChange?Color.RED : Color.RED);
+                            mBtnSelectWords.get(i).mViewButton.setTextColor(mChange?Color.RED : Color.WHITE);
                         }
                         mChange = !mChange;
                     }
@@ -448,6 +450,7 @@ public class MainActivity extends Activity  implements IWordButtonClickListener{
 
         Timer timer = new Timer();
         timer.schedule(task,1,150);
+        //三个参数，1.具体任务2.什么时候开始3.持续的事件是多少
     }
 
 
