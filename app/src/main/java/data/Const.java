@@ -6,6 +6,9 @@ public class Const {
 
     public static final int INDEX_SONG_NAME = 1;
 
+    //当前金币数量
+    public static final int TOTAL_COINS = 999;
+
     public static final String SONG_INFO[][] ={
             {"__00000.m4a", "征服"},
             {"__00001.m4a", "童话"},

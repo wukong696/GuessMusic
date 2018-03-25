@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -36,6 +37,12 @@ public class MainActivity extends Activity  implements IWordButtonClickListener{
     private final static int STATUS_ANSWER_LACK =3;
 
     private final static int SPASH_TIMES = 6;
+
+    //当前金币的数量
+    private int mCurrentCoins = Const.TOTAL_COINS;
+
+    //金币View
+    private TextView mViewCurrentCoins;
 
     //唱片动画定义
     private Animation mPanAnim;//定义动画
@@ -90,6 +97,9 @@ public class MainActivity extends Activity  implements IWordButtonClickListener{
         mViewPanbar = (ImageView)findViewById(R.id.pin_1);
         mMygridView = (MyGridView)findViewById(R.id.gridview);//待选文本框
         mViewWordsCantainer = (LinearLayout)findViewById(R.id.word_select_container);//已选文本框
+        //右上角金币
+        mViewCurrentCoins = (TextView)findViewById(R.id.txt_bar_coins);
+        mViewCurrentCoins.setText(mCurrentCoins + "");
         //注册监听
         mMygridView.registOnWordButtonClick(this);
 
@@ -176,6 +186,11 @@ public class MainActivity extends Activity  implements IWordButtonClickListener{
 
         //获取更新文本框数据
         initCurrentStageData();
+
+        //删除道具
+        handleDeleteWord();
+        //提示道具
+        handleTipAnswer();
     }
 
     @Override
@@ -458,6 +473,149 @@ public class MainActivity extends Activity  implements IWordButtonClickListener{
     private void handlePassEvent(){
         mPassView = (LinearLayout)findViewById(R.id.pass_view);
         mPassView.setVisibility(View.VISIBLE);
+
+    }
+
+
+
+   //自动选择一个答案
+    private void tipAnswer(){
+
+
+        boolean tipWord = false;
+        for(int i = 0;i < mBtnSelectWords.size();i++){
+            if(mBtnSelectWords.get(i).mWordString.length() == 0){
+                //根据当前的答案框条件选择对应的文字并且填入
+                onWordButtonClick(findIsAnswerWord(i));
+
+                tipWord = true;
+
+                //减少金币数量
+                if(handleCoins(-getTipCoins())){
+                    //金币数量不够的时候显示对话框，提示金币数量不够
+                    return;
+                }
+                break;
+            }
+        }
+        //没有找到可以填充的答案的控件
+        if(!tipWord){
+            //闪烁文字提示用户
+            sparkTheWrods();
+
+        }
+    }
+
+
+    //删除文字，应用于道具
+    private void deleteOneWord(){
+
+        //减少金币
+        if (!handleCoins(-getDeleteWordCoins())){
+            //金币不够，显示提示对话框
+              return;
+        }
+
+        //将索引对应的按钮设置不可见
+        setButtonVisiable(findNotAnswerWord(),View.INVISIBLE);
+    }
+
+    //找一个不是答案的文字，并且当前是可见的的控件
+    private WordButton findNotAnswerWord(){
+        Random random = new Random();
+        WordButton buf = null;
+
+        while (true){
+            int index = random.nextInt(MyGridView.COUNTS_WORD);//获取随机数
+
+            buf = mAllWords.get(index);//根据随机生成的索引把button对象取出来
+
+            if (buf.mIsVisiable && !isTheAnswerWord(buf)){
+                return buf;
+            }
+        }
+
+
+    }
+
+    //找到一个是答案的文字，index是当前需要填入答案的索引
+    private WordButton findIsAnswerWord(int index){
+        WordButton buf = null;
+
+        for(int i = 0;i < MyGridView.COUNTS_WORD;i++){
+            buf  = mAllWords.get(i);
+
+            if (buf.mWordString.equals("" + mCurrentSong.getNameCharacters()[index])){
+                return buf;
+            }
+        }
+
+        return null;
+
+
+    }
+
+    //判断某个文字是否为答案
+    private boolean isTheAnswerWord(WordButton word){
+        boolean result = false;
+
+        for (int i = 0;i < mCurrentSong.getNameLength(); i++){
+            if(word.mWordString.equals("" + mCurrentSong.getNameCharacters()[i])){
+                result = true;
+                break;
+            }
+        }
+        return result;
+
+    }
+
+    //增加或者减少指定数量金币，
+    private boolean handleCoins(int data){
+        //判断当前总金币数是否可以被减少
+        if(mCurrentCoins + data >= 0){
+            mCurrentCoins += data;
+
+            mViewCurrentCoins.setText(mCurrentCoins + "");
+            return true;
+        }else {
+            //金币不够
+            return false;
+        }
+
+    }
+
+    //获取删除待选字的金币数量
+    private int getDeleteWordCoins(){
+        return this.getResources().getInteger(R.integer.pay_delete_word);
+    }
+
+    private int getTipCoins(){
+        return this.getResources().getInteger(R.integer.pay_tip_answer);
+    }
+
+    //删除工具处理删除待选文字事件
+    private void handleDeleteWord(){
+        ImageButton button = (ImageButton)findViewById(R.id.btn_delete_word);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                deleteOneWord();
+            }
+        });
+    }
+
+    //处理提示答案事件
+    private void handleTipAnswer(){
+
+        ImageButton button = (ImageButton)findViewById(R.id.btn_tip_answer);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                tipAnswer();
+
+            }
+        });
 
     }
 
