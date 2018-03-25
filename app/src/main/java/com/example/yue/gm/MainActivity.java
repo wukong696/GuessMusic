@@ -393,7 +393,7 @@ public class MainActivity extends Activity  implements IWordButtonClickListener{
         String str = "";
         int hightPos;
         int lowPos;
-        //随机
+        //随机数
         Random random = new Random();
         //生成高低位
         hightPos = (176 +Math.abs(random.nextInt(39)));
