@@ -23,4 +23,11 @@ public class Const {
             {"__00010.m4a", "龙的传人"},
     };
 
+    public static final String FILE_NAME_SAVE_DATA = "data.dat";
+
+    public static final int INDEX_LOAD_DATA_STAGE = 0;//保存关卡数
+
+    public static final int INDEX_LOAD_DATA_COINS = 1;//保存金币数
+
+    public static final int PASS_GIVE_COINS = 30;
 }

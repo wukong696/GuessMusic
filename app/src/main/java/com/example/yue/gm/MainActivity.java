@@ -108,6 +108,11 @@ public class MainActivity extends Activity  implements IWordButtonClickListener{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //读取游戏数据
+        int[] datas = Util.loadData(this);
+        mCurrentStageIndex = datas[Const.INDEX_LOAD_DATA_STAGE];
+        mCurrentCoins = datas[Const.INDEX_LOAD_DATA_COINS];
+
         mBtnPlaystart = (ImageButton)findViewById(R.id.btn_play_start);
         mViewPan = (ImageView)findViewById(R.id.pan_1);
         mViewPanbar = (ImageView)findViewById(R.id.pin_1);
@@ -224,6 +229,7 @@ public class MainActivity extends Activity  implements IWordButtonClickListener{
         if(checkResult == STATUS_ANSWER_RIGHT){
             //过关并获得奖励
             handlePassEvent();
+
         }else if(checkResult == STATUS_ANSWER_WEONG){
             //闪烁文字并提示用户
             sparkTheWrods();
@@ -277,12 +283,22 @@ public class MainActivity extends Activity  implements IWordButtonClickListener{
 
     @Override
     protected void onPause() {
+        //保存游戏数据
+        Util.saveData(MainActivity.this,mCurrentStageIndex -1,mCurrentCoins);
+
         //停止动画
         mViewPan.clearAnimation();
         //暂停音乐
         MyPlayer.stopTheSong(MainActivity.this);
 
         super.onPause();
+    }
+
+    @Override
+    protected void onDestroy() {
+        //保存游戏数据
+        Util.saveData(MainActivity.this,mCurrentStageIndex -1,mCurrentCoins);
+        super.onDestroy();
     }
 
     //播放动画总方法
@@ -513,7 +529,7 @@ public class MainActivity extends Activity  implements IWordButtonClickListener{
 
 
     //处理过关界面和事件
-    private void handlePassEvent(){
+    private void  handlePassEvent(){
         //显示过关界面
         mPassView = (LinearLayout)findViewById(R.id.pass_view);
         mPassView.setVisibility(View.VISIBLE);
@@ -524,8 +540,11 @@ public class MainActivity extends Activity  implements IWordButtonClickListener{
         //停止正在播放的音乐
         MyPlayer.stopTheSong(MainActivity.this);
 
+
         //播放金币音效
-        MyPlayer.playTone(MainActivity.this,MyPlayer.INDEX_STONG_COIN);
+        MyPlayer.playTone(MainActivity.this,MyPlayer.INDEX_STONG_COIN  );
+
+
 
 
 
@@ -557,8 +576,13 @@ public class MainActivity extends Activity  implements IWordButtonClickListener{
                     //进入下一关
                     mPassView.setVisibility(View.GONE);//隐藏通关界面
 
+                    //金币增加
+                    mCurrentCoins = mCurrentCoins +Const.PASS_GIVE_COINS;
+                    mViewCurrentCoins.setText(mCurrentCoins + "");
+
                     //加载关卡数据
                     initCurrentStageData();
+
                 }
 
             }

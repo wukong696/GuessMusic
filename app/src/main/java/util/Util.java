@@ -11,6 +11,15 @@ import android.widget.TextView;
 
 import com.example.yue.gm.R;
 
+import java.io.DataInput;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+
+import data.Const;
 import model.IAlertDialogButtonListener;
 
 public class Util {
@@ -89,6 +98,60 @@ public class Util {
 
         //显示对话框
         mAlertDialog.show();
+    }
+
+
+    //游戏数据保存
+    public static void saveData(Context context,int stageIndex,int coins){
+        FileOutputStream fis = null;
+        try {
+            fis = context.openFileOutput(Const.FILE_NAME_SAVE_DATA,Context.MODE_PRIVATE);//文件名和覆盖方式,节点流
+
+            DataOutputStream dos = new DataOutputStream(fis);//处理流
+            dos.writeInt(stageIndex);
+            dos.writeInt(coins);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+        finally {
+            //关闭流
+            if(fis != null){
+                try {
+                    fis.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    //游戏数据读取操作
+    public static int[] loadData(Context context){
+        FileInputStream fis = null;
+        int[] datas = {-1,Const.TOTAL_COINS};//首次进入游戏
+
+        try {
+           fis = context.openFileInput(Const.FILE_NAME_SAVE_DATA);
+            DataInputStream dis = new DataInputStream(fis);
+
+            datas[Const.INDEX_LOAD_DATA_STAGE] = dis.readInt();
+            datas[Const.INDEX_LOAD_DATA_COINS] = dis.readInt();
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }catch (IOException e){
+            e.printStackTrace();
+        } finally {
+            if(fis != null) {
+                try {
+                    fis.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }return datas;
     }
 
 }
