@@ -37,7 +37,7 @@ public class Util {
     }
 
     //显示自定义对话框
-    public static void showDialog(Context context, String message, final IAlertDialogButtonListener listener){
+    public static void showDialog(final Context context, String message, final IAlertDialogButtonListener listener){
         View dialogView = null;
         AlertDialog.Builder builder = new AlertDialog.Builder(context,R.style.Theme_Transparent);
 
@@ -62,7 +62,8 @@ public class Util {
                     listener.onClick();
                 }
 
-
+                //播放点击音效
+                MyPlayer.playTone(context,MyPlayer.INDEX_STONE_ENTER);
 
             }
         });
@@ -74,6 +75,10 @@ public class Util {
                 if(mAlertDialog != null){
                     mAlertDialog.cancel();
                 }
+
+                //播放点击音效
+                MyPlayer.playTone(context,MyPlayer.INDEX_STONE_CANCEL);
+
 
             }
         });

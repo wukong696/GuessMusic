@@ -3,6 +3,7 @@ package com.example.yue.gm;
 import android.app.Activity;
 
 import android.graphics.Color;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.View;
 import android.view.animation.Animation;
@@ -27,6 +28,7 @@ import model.Song;
 import model.WordButton;
 import myui.MyGridView;
 import util.MyLog;
+import util.MyPlayer;
 import util.Util;
 
 public class MainActivity extends Activity  implements IWordButtonClickListener{
@@ -205,6 +207,10 @@ public class MainActivity extends Activity  implements IWordButtonClickListener{
         handleDeleteWord();
         //提示道具
         handleTipAnswer();
+
+
+
+
     }
 
     @Override
@@ -271,7 +277,11 @@ public class MainActivity extends Activity  implements IWordButtonClickListener{
 
     @Override
     protected void onPause() {
-        mViewPan.clearColorFilter();
+        //停止动画
+        mViewPan.clearAnimation();
+        //暂停音乐
+        MyPlayer.stopTheSong(MainActivity.this);
+
         super.onPause();
     }
 
@@ -280,8 +290,11 @@ public class MainActivity extends Activity  implements IWordButtonClickListener{
         if(mViewPanbar != null){
             if(!mIsRuning){
                 mIsRuning = true;//播放后设置mIsRuning值,期间不能执行动画
+                //开始拨杆动画
                 mViewPanbar.startAnimation(mBarInAnim);//播放动画
                 mBtnPlaystart.setVisibility(View.INVISIBLE);//播放期间播放按钮隐藏
+                //播放音乐
+                MyPlayer.playSong(MainActivity.this,mCurrentSong.getSongFileName());
             }
         }
 
@@ -329,6 +342,9 @@ public class MainActivity extends Activity  implements IWordButtonClickListener{
         mAllWords = initAllword();
         //更新数据-MyGridView
         mMygridView.updateData(mAllWords);
+
+        //播放音乐
+        hangdlePlayButton();
     }
 
 
@@ -502,8 +518,16 @@ public class MainActivity extends Activity  implements IWordButtonClickListener{
         mPassView = (LinearLayout)findViewById(R.id.pass_view);
         mPassView.setVisibility(View.VISIBLE);
 
+
         //停止未完成的动画
         mViewPan.clearAnimation();
+        //停止正在播放的音乐
+        MyPlayer.stopTheSong(MainActivity.this);
+
+        //播放金币音效
+        MyPlayer.playTone(MainActivity.this,MyPlayer.INDEX_STONG_COIN);
+
+
 
         //当前关的索引
         mCurrentStagePassView = (TextView)findViewById(R.id.text_current_stage_pass);
