@@ -45,6 +45,9 @@ public class MainActivity extends Activity  implements IWordButtonClickListener{
     public final static int ID_DIALOG_TIP_ANSWER = 2;
     public final static int ID_DIALOG_LACK_COINS = 3;
 
+    //返回按钮
+    private ImageView back;
+
     //当前金币的数量
     private int mCurrentCoins = Const.TOTAL_COINS;
 
@@ -103,10 +106,19 @@ public class MainActivity extends Activity  implements IWordButtonClickListener{
 
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        back = (ImageButton)findViewById(R.id.btn_bar_back);
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
         //读取游戏数据
         int[] datas = Util.loadData(this);

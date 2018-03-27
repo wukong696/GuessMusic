@@ -19,13 +19,6 @@
             android:layout_marginRight="5dp"
             android:src="@drawable/index_medal"/>
 
-        <TextView
-            android:id="@+id/text_main_achievement"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="您已击败"
-            android:textColor="#FFF"
-            android:textSize="18sp"/>
 
     </LinearLayout>
 
