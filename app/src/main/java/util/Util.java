@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageButton;
@@ -11,9 +12,10 @@ import android.widget.TextView;
 
 import com.example.yue.gm.R;
 
-import java.io.DataInput;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -153,5 +155,7 @@ public class Util {
             }
         }return datas;
     }
+
+
 
 }

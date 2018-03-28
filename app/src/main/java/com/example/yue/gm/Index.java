@@ -10,6 +10,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import data.Const;
+import util.MyApplication;
+import util.MyPlayer;
 import util.Util;
 
 //目录
@@ -70,6 +72,10 @@ public class Index extends Activity {
         something.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                //播放点击音效
+                MyPlayer.playTone(MyApplication.getContext(),MyPlayer.INDEX_STONE_ENTER);
+
                 Intent intent = new Intent(Index.this,Something.class);
                 startActivity(intent);
             }
@@ -79,6 +85,8 @@ public class Index extends Activity {
         money.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //播放点击音效
+                MyPlayer.playTone(MyApplication.getContext(),MyPlayer.INDEX_STONE_ENTER);
                 Intent intent = new Intent(Index.this,Money.class);
                 startActivity(intent);
             }

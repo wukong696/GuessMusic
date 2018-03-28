@@ -50,6 +50,7 @@
         android:gravity="center">
 
         <ImageButton
+            android:id="@+id/btn_restet"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
@@ -77,6 +78,7 @@
                 android:background="@drawable/allpass_text2"/>
 
             <ImageButton
+                android:id="@+id/pass_money"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom|right"
