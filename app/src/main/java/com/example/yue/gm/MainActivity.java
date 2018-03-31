@@ -145,19 +145,16 @@ public class MainActivity extends Activity  implements IWordButtonClickListener{
             //设置动画监听器
             @Override
             public void onAnimationStart(Animation animation) {
-
             }
 
             @Override
             public void onAnimationEnd(Animation animation) {
                 mViewPanbar.startAnimation(mBarOutAnim);
-
             }
 
             @Override
             public void onAnimationRepeat(Animation animation) {
                 //动画重复
-
             }
         });
 
@@ -176,6 +173,7 @@ public class MainActivity extends Activity  implements IWordButtonClickListener{
 
             @Override
             public void onAnimationEnd(Animation animation) {
+
                 mViewPan.startAnimation(mPanAnim);
             }
 
@@ -670,8 +668,6 @@ public class MainActivity extends Activity  implements IWordButtonClickListener{
                 return buf;
             }
         }
-
-
     }
 
     //找到一个是答案的文字，index是当前需要填入答案的索引

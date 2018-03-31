@@ -104,4 +104,19 @@ public class Index extends Activity {
 
 
     }
+
+    @Override
+    protected void onResume() {
+
+        //读取游戏数据
+        int[] datas = Util.loadData(this);
+        mCurrentStageIndex = datas[Const.INDEX_LOAD_DATA_STAGE];
+        mCurrentCoins = datas[Const.INDEX_LOAD_DATA_COINS];
+
+        //右上角金币
+        mViewCurrentCoins = (TextView)findViewById(R.id.txt_bar_coins);
+        mViewCurrentCoins.setText(mCurrentCoins + "");
+
+        super.onResume();
+    }
 }

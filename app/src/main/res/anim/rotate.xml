@@ -13,5 +13,4 @@
         android:pivotX="50%"
         android:pivotY="50%"
         android:repeatCount="3"/>
-
 </set>

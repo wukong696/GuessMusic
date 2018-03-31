@@ -54,7 +54,6 @@ public class MyPlayer {
         if(mMusicMediaPlayer == null){
             mMusicMediaPlayer = new MediaPlayer();
         }
-
         //强制重置状态
         mMusicMediaPlayer.reset();
         //加载声音文件
@@ -67,9 +66,7 @@ public class MyPlayer {
                     ,fileDescriptor.getLength());
 
             mMusicMediaPlayer.prepare();
-
             //声音播放
-
         }catch (IOException e){
             e.printStackTrace();
         }
